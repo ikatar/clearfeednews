@@ -1,0 +1,6 @@
+python-telegram-bot[webhooks]>=21.0,<22.0
+feedparser>=6.0,<7.0
+APScheduler>=3.10,<4.0
+aiosqlite>=0.19,<1.0
+python-dotenv>=1.0,<2.0
+trendspy>=0.2
