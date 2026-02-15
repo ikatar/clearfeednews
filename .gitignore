@@ -1,6 +1,6 @@
 # Environment & secrets
 *.env
-*.ignore
+.ignore/
 
 # Database
 *.db
@@ -17,6 +17,6 @@ venv/
 .idea/
 
 # Claude Code
-.claude/
+*.claude/
 
 

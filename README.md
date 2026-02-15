@@ -67,22 +67,58 @@ The bot will initialise the database, fetch RSS feeds, and start listening for c
 
 ## Deployment
 
-### Docker
+### Oracle Cloud VM (production)
+
+```bash
+# Clone and setup
+git clone <your-repo-url> clearfeednews
+cd clearfeednews
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+nano .env  # set BOT_TOKEN, BOT_MODE=polling
+
+# Create systemd service
+sudo nano /etc/systemd/system/clearfeed.service
+```
+
+```ini
+[Unit]
+Description=Clear Feed News Telegram Bot
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/clearfeednews
+ExecStart=/home/ubuntu/clearfeednews/venv/bin/python bot.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable clearfeed
+sudo systemctl start clearfeed
+```
+
+### Updating
+
+```bash
+cd clearfeednews
+git pull
+sudo systemctl restart clearfeed
+```
+
+### Docker (optional)
 
 ```bash
 docker build -t clearfeed .
 docker run -e BOT_TOKEN=your-token -e BOT_MODE=polling clearfeed
 ```
-
-### Render
-
-1. Push this repo to GitHub
-2. Create a new Web Service on [Render](https://render.com)
-3. Connect your repo and select Docker runtime
-4. Set environment variables: `BOT_TOKEN`, `BOT_MODE=webhook`, `WEBHOOK_URL=https://your-app.onrender.com`
-5. Deploy
-
-Alternatively, use the included `render.yaml` for Blueprint deployment.
 
 ## Architecture
 

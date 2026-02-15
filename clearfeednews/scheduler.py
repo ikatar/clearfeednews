@@ -8,9 +8,10 @@ from datetime import datetime, timezone, timedelta
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from telegram import Bot, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.error import Forbidden
 
 from config import CATEGORIES, FETCH_INTERVAL_HOURS, MAX_ARTICLES_PER_CATEGORY
-from database import count_unseen_articles, get_active_users, get_unseen_articles, get_user_categories, mark_articles_sent
+from database import cleanup_old_articles, count_unseen_articles, get_active_users, get_unseen_articles, get_user_categories, mark_articles_sent, set_user_active
 from fetcher import fetch_all_feeds
 from formatter import format_category_more
 
@@ -37,6 +38,16 @@ async def job_fetch_feeds() -> None:
         logger.info("Scheduled fetch complete — %d new articles", count)
     except Exception:
         logger.exception("Error in scheduled feed fetch")
+
+
+async def job_cleanup_articles() -> None:
+    """Remove articles older than 30 days to keep the database small."""
+    try:
+        removed = await cleanup_old_articles(days=30)
+        if removed:
+            logger.info("Cleanup: removed %d old articles", removed)
+    except Exception:
+        logger.exception("Error in article cleanup")
 
 
 async def job_send_digests() -> None:
@@ -119,6 +130,9 @@ async def job_send_digests() -> None:
                 # Stagger between users
                 await asyncio.sleep(0.1)
 
+            except Forbidden:
+                logger.warning("User %s blocked the bot — deactivating", user.get("user_id"))
+                await set_user_active(user["user_id"], False)
             except Exception:
                 logger.exception("Failed to send digest to user %s", user.get("user_id"))
 
@@ -140,7 +154,7 @@ def start_scheduler() -> None:
         replace_existing=True,
     )
 
-    # Check for digest delivery every minute
+    # Check for digest delivery every hour
     scheduler.add_job(
         job_send_digests,
         "cron",
@@ -149,9 +163,19 @@ def start_scheduler() -> None:
         replace_existing=True,
     )
 
+    # Cleanup old articles daily at 03:00 UTC
+    scheduler.add_job(
+        job_cleanup_articles,
+        "cron",
+        hour="3",
+        minute="0",
+        id="cleanup_articles",
+        replace_existing=True,
+    )
+
     scheduler.start()
     logger.info(
-        "Scheduler started — fetching every %dh, digest check every hour",
+        "Scheduler started — fetching every %dh, digest check hourly, cleanup daily at 03:00 UTC",
         FETCH_INTERVAL_HOURS,
     )
 
