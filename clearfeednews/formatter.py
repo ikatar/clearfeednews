@@ -44,7 +44,7 @@ def format_digest(
     Returns a list of strings, each within Telegram's 4096-char limit.
     """
     if not articles_by_cat:
-        return ["No new articles to show right now. Check back later!\n\nType /more when you\u2019re ready."]
+        return ["No new articles to show right now. Check back later!"]
 
     if has_more_by_cat is None:
         has_more_by_cat = {}
@@ -78,7 +78,7 @@ def format_digest(
         sections.append("\n".join(lines))
 
     separator = "\n========================\n"
-    footer_line = "\n_Clear Feed News \u00b7 Calm, non-outrage curation focused on signal, not noise_\n/more"
+    footer_line = "\n_Clear Feed News \u00b7 Calm, non-outrage curation_\n/more"
 
     # Assemble, splitting if needed
     messages: list[str] = []
@@ -139,7 +139,7 @@ def format_category_more(
 
     if include_footer:
         parts.append(
-            "\n_Clear Feed News \u00b7 Calm, non-outrage curation focused on signal, not noise_"
+            "\n_Clear Feed News \u00b7 Calm, non-outrage curation_"
         )
 
     return "\n".join(parts)

@@ -63,7 +63,7 @@ async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     welcome = (
         f"Hi {user.first_name}! Welcome to *Clear Feed News* \u2600\ufe0f\n\n"
-        "I deliver curated *positive, neutral & educational* news "
+        "I deliver curated *positive & educational* news "
         "straight to your chat \u2014 no doom-scrolling required.\n\n"
         "*Here\u2019s how to get started:*\n"
         "1\ufe0f\u20e3 Pick your categories with /categories\n"
@@ -166,18 +166,18 @@ _TIMEZONE_OPTIONS = [
     (-12, "UTC-12 (Baker Island)"),
     (-10, "UTC-10 (Hawaii)"),
     (-9, "UTC-9 (Alaska)"),
-    (-8, "UTC-8 (Pacific)"),
-    (-7, "UTC-7 (Mountain)"),
-    (-6, "UTC-6 (Central)"),
-    (-5, "UTC-5 (Eastern)"),
-    (-4, "UTC-4 (Atlantic)"),
+    (-8, "UTC-8 (Los Angeles)"),
+    (-7, "UTC-7 (Denver)"),
+    (-6, "UTC-6 (Chicago)"),
+    (-5, "UTC-5 (New York)"),
+    (-4, "UTC-4 (Santiago)"),
     (-3, "UTC-3 (Buenos Aires)"),
-    (-2, "UTC-2"),
+    (-2, "UTC-2 (South Georgia)"),
     (-1, "UTC-1 (Azores)"),
     (0, "UTC+0 (London)"),
     (1, "UTC+1 (Paris)"),
     (2, "UTC+2 (Cairo)"),
-    (3, "UTC+3 (Moscow)"),
+    (3, "UTC+3 (Istanbul)"),
     (4, "UTC+4 (Dubai)"),
     (5, "UTC+5 (Karachi)"),
     (5, "UTC+5:30 (India)"),
