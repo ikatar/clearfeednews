@@ -1,19 +1,19 @@
 # Clear Feed News
 
-A Telegram bot that delivers curated positive, neutral and educational news via RSS feeds. No doom-scrolling — just good stuff.
+A Telegram bot that delivers curated positive, neutral and educational news via RSS feeds. No doom-scrolling - just good stuff.
 
 ## Features
 
-- **10 curated categories** — Science, Tech, AI, Gaming, Environment, Health, Creative, Good News, Career, Food & Culture
-- **Google Trends scoring** — articles ranked by trending relevance, not just recency
-- **Source diversity** — max 2 articles per source per category, so no single outlet dominates
-- **Per-category messages** — each category sent as its own message with a dedicated "More" button
-- **Keyword blocking** — filter out topics you don't want
-- **Source management** — toggle individual feeds on/off per category
-- **Timezone support** — digests arrive at the right local time
-- **User-configurable delivery times** — pick morning and evening digest times with `/schedule`
-- **On-demand digest** — `/more` for instant news
-- **Async throughout** — built on python-telegram-bot (async), aiosqlite, APScheduler
+- **10 curated categories** - Science, Tech, AI, Gaming, Environment, Health, Creative, Good News, Career, Food & Culture
+- **Google Trends scoring** - articles ranked by trending relevance, not just recency
+- **Source diversity** - max 2 articles per source per category, so no single outlet dominates
+- **Per-category messages** - each category sent as its own message with a dedicated "More" button
+- **Keyword blocking** - filter out topics you don't want
+- **Source management** - toggle individual feeds on/off per category
+- **Timezone support** - digests arrive at the right local time
+- **User-configurable delivery times** - pick morning and evening digest times with `/schedule`
+- **On-demand digest** - `/more` for instant news
+- **Async throughout** - built on python-telegram-bot (async), aiosqlite, APScheduler
 
 ## Quick Start
 
@@ -123,15 +123,15 @@ docker run -e BOT_TOKEN=your-token -e BOT_MODE=polling clearfeed
 ## Architecture
 
 ```
-bot.py          — entry point (polling or webhook)
-config.py       — settings, RSS feed URLs, blocked keywords
-database.py     — async SQLite (aiosqlite) schema and queries
-fetcher.py      — RSS fetching with dedup and filtering
-filters.py      — keyword blocklist sentiment filtering
-trending.py     — Google Trends scoring (trendspy)
-handlers.py     — Telegram command handlers
-scheduler.py    — APScheduler for periodic fetch + digest delivery
-formatter.py    — digest message formatting
+bot.py          - entry point (polling or webhook)
+config.py       - settings, RSS feed URLs, blocked keywords
+database.py     - async SQLite (aiosqlite) schema and queries
+fetcher.py      - RSS fetching with dedup and filtering
+filters.py      - keyword blocklist sentiment filtering
+trending.py     - Google Trends scoring (trendspy)
+handlers.py     - Telegram command handlers
+scheduler.py    - APScheduler for periodic fetch + digest delivery
+formatter.py    - digest message formatting
 ```
 
 ### Data Flow

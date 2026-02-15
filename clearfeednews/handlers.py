@@ -64,7 +64,7 @@ async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     welcome = (
         f"Hi {user.first_name}! Welcome to *Clear Feed News* \u2600\ufe0f\n\n"
         "I deliver curated *positive & educational* news "
-        "straight to your chat \u2014 no doom-scrolling required.\n\n"
+        "straight to your chat - no doom-scrolling required.\n\n"
         "*Here\u2019s how to get started:*\n"
         "1\ufe0f\u20e3 Pick your categories with /categories\n"
         "2\ufe0f\u20e3 Set your timezone and delivery schedule\n"
@@ -255,7 +255,7 @@ async def callback_timezone(update: Update, context: ContextTypes.DEFAULT_TYPE) 
 
 
 # ---------------------------------------------------------------------------
-# /schedule — pick delivery times
+# /schedule - pick delivery times
 # ---------------------------------------------------------------------------
 _MORNING_OPTIONS = [
     ("06:00", "6:00 AM"),
@@ -626,21 +626,21 @@ async def cmd_help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     text = (
         "*Clear Feed News Commands*\n\n"
-        "/start \u2014 Welcome & onboarding\n"
-        "/categories \u2014 Pick news categories\n"
-        "/sources \u2014 Toggle individual feeds per category\n"
-        "/timezone \u2014 Set your timezone\n"
-        "/schedule \u2014 Pick delivery times\n"
-        "/more \u2014 Get your latest digest now\n"
-        "/block `<keyword>` \u2014 Block a keyword\n"
-        "/unblock `<keyword>` \u2014 Remove a block\n"
-        "/unblock `all` \u2014 Clear entire blocklist\n"
-        "/blocklist \u2014 View your blocks\n"
-        "/settings \u2014 View your current config\n"
-        "/reset \u2014 Reset all preferences\n"
-        "/pause \u2014 Pause scheduled digests\n"
-        "/resume \u2014 Resume scheduled digests\n"
-        "/help \u2014 This message"
+        "/start - Welcome & onboarding\n"
+        "/categories - Pick news categories\n"
+        "/sources - Toggle individual feeds per category\n"
+        "/timezone - Set your timezone\n"
+        "/schedule - Pick delivery times\n"
+        "/more - Get your latest digest now\n"
+        "/block `<keyword>` - Block a keyword\n"
+        "/unblock `<keyword>` - Remove a block\n"
+        "/unblock `all` - Clear entire blocklist\n"
+        "/blocklist - View your blocks\n"
+        "/settings - View your current config\n"
+        "/reset - Reset all preferences\n"
+        "/pause - Pause scheduled digests\n"
+        "/resume - Resume scheduled digests\n"
+        "/help - This message"
     )
     await update.message.reply_text(text, parse_mode="Markdown")
 
@@ -669,7 +669,7 @@ async def cmd_resume(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
 
 
 # ---------------------------------------------------------------------------
-# /sources — view and toggle individual feeds within categories
+# /sources - view and toggle individual feeds within categories
 # ---------------------------------------------------------------------------
 def _domain(url: str) -> str:
     return urlparse(url).netloc.removeprefix("www.")
@@ -687,7 +687,7 @@ async def cmd_sources(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         )
         return
 
-    # Show category picker — user picks which category to manage sources for
+    # Show category picker - user picks which category to manage sources for
     buttons: list[list[InlineKeyboardButton]] = []
     for cat in categories:
         emoji = CATEGORIES.get(cat, "")
@@ -728,7 +728,7 @@ async def _send_sources_keyboard(
 
     emoji = CATEGORIES.get(category, "")
     await query.edit_message_text(
-        f"*{emoji} {category} \u2014 Sources*\n"
+        f"*{emoji} {category} - Sources*\n"
         "Tap to block/unblock a source:",
         reply_markup=InlineKeyboardMarkup(buttons),
         parse_mode="Markdown",
@@ -796,13 +796,13 @@ async def callback_srcdone(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     if active:
         sources_str = ", ".join(active)
         await query.edit_message_text(
-            f"*{emoji} {category}* \u2014 sources saved!\n\n"
+            f"*{emoji} {category}* - sources saved!\n\n"
             f"Active: {sources_str}",
             parse_mode="Markdown",
         )
     else:
         await query.edit_message_text(
-            f"*{emoji} {category}* \u2014 all sources blocked.\n"
+            f"*{emoji} {category}* - all sources blocked.\n"
             "You won\u2019t receive articles for this category until you re-enable some.",
             parse_mode="Markdown",
         )

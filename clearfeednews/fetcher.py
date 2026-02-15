@@ -18,7 +18,7 @@ from trending import fetch_trending_topics, score_articles
 
 logger = logging.getLogger(__name__)
 
-# feedparser is synchronous — run it in a thread pool.
+# feedparser is synchronous - run it in a thread pool.
 _executor = ThreadPoolExecutor(max_workers=8)
 
 
@@ -103,7 +103,7 @@ async def fetch_all_feeds() -> int:
                 logger.warning("Empty/malformed feed %s: %s", url, feed.bozo_exception)
                 continue
             if feed.bozo:
-                logger.debug("Feed %s has bozo flag but %d entries — using them", url, len(feed.entries))
+                logger.debug("Feed %s has bozo flag but %d entries - using them", url, len(feed.entries))
 
             source_name = _extract_source(url, feed.feed.get("title"))
             for entry in feed.entries:
@@ -129,5 +129,5 @@ async def fetch_all_feeds() -> int:
             inserted,
         )
 
-    logger.info("Fetch complete — %d new articles total", total_inserted)
+    logger.info("Fetch complete - %d new articles total", total_inserted)
     return total_inserted

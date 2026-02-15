@@ -1,4 +1,4 @@
-"""Clear Feed News configuration — feeds, settings, and blocked keywords."""
+"""Clear Feed News configuration - feeds, settings, and blocked keywords."""
 
 import os
 from pathlib import Path
@@ -38,7 +38,7 @@ DB_PATH: str = os.getenv("DB_PATH", str(BASE_DIR / "clearfeed.db"))
 COMMAND_COOLDOWN_SECONDS: int = 2
 
 # ---------------------------------------------------------------------------
-# Global keyword blocklist — articles whose title or summary contain any of
+# Global keyword blocklist - articles whose title or summary contain any of
 # these words (case-insensitive) are filtered out before reaching users.
 # ---------------------------------------------------------------------------
 GLOBAL_BLOCK_KEYWORDS: list[str] = [
@@ -63,7 +63,7 @@ GLOBAL_BLOCK_KEYWORDS: list[str] = [
 ]
 
 # ---------------------------------------------------------------------------
-# Blocked sources — entire domains we never pull from.
+# Blocked sources - entire domains we never pull from.
 # ---------------------------------------------------------------------------
 BLOCKED_SOURCES: list[str] = [
     # Misinformation / conspiracy
@@ -116,7 +116,7 @@ CATEGORIES: dict[str, str] = {
 }
 
 # ---------------------------------------------------------------------------
-# RSS feeds — 3-5 real, working feeds per category.
+# RSS feeds - 3-5 real, working feeds per category.
 # Chosen for positive / neutral / educational tone.
 # ---------------------------------------------------------------------------
 FEEDS: dict[str, list[str]] = {

@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 _executor = ThreadPoolExecutor(max_workers=2)
 
 # ---------------------------------------------------------------------------
-# Stopwords — lightweight set, no NLTK download required
+# Stopwords - lightweight set, no NLTK download required
 # ---------------------------------------------------------------------------
 _STOPWORDS: set[str] = {
     "a", "an", "the", "and", "or", "but", "in", "on", "at", "to", "for",
@@ -55,7 +55,7 @@ def extract_keywords(title: str) -> list[str]:
 # Trending topic fetching
 # ---------------------------------------------------------------------------
 def _fetch_trending_sync() -> list[str]:
-    """Blocking call to trendspy — run in executor."""
+    """Blocking call to trendspy - run in executor."""
     try:
         from trendspy import Trends
 
@@ -131,7 +131,7 @@ def compute_trending_score(
         # Slow path: fuzzy match against unique topic words
         best = 0.0
         for topic_word, weight in index.topic_entries:
-            # Quick length check — SequenceMatcher can't exceed 0.6
+            # Quick length check - SequenceMatcher can't exceed 0.6
             # if lengths differ by more than 2.5x
             if len(kw) > 2 * len(topic_word) or len(topic_word) > 2 * len(kw):
                 continue

@@ -47,7 +47,7 @@ def filter_articles(articles: list[dict[str, Any]]) -> list[dict[str, Any]]:
         title = article.get("title", "")
         summary = article.get("summary", "")
 
-        # Layer 1 — keyword blocklist
+        # Layer 1 - keyword blocklist
         if not passes_keyword_filter(title, summary):
             logger.debug("Blocked by keyword filter: %s", title[:80])
             continue

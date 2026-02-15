@@ -1,8 +1,8 @@
-"""Clear Feed News — main entry point.
+"""Clear Feed News - main entry point.
 
 Supports two modes (set via BOT_MODE env var):
-  polling  — local development / Oracle VM
-  webhook  — Render or other PaaS
+  polling  - local development / Oracle VM
+  webhook  - Render or other PaaS
 """
 
 from __future__ import annotations
@@ -38,9 +38,9 @@ async def post_init(app: Application) -> None:
     logger.info("Running initial feed fetch...")
     try:
         count = await fetch_all_feeds()
-        logger.info("Initial fetch complete — %d new articles", count)
+        logger.info("Initial fetch complete - %d new articles", count)
     except Exception:
-        logger.exception("Initial fetch failed — bot will retry on schedule")
+        logger.exception("Initial fetch failed - bot will retry on schedule")
     set_bot(app.bot)
     start_scheduler()
 
@@ -57,7 +57,7 @@ def main() -> None:
         logger.critical("BOT_TOKEN is not set. Export it as an environment variable.")
         sys.exit(1)
 
-    # Python 3.12+ no longer auto-creates an event loop — ensure one exists.
+    # Python 3.12+ no longer auto-creates an event loop - ensure one exists.
     try:
         asyncio.get_running_loop()
     except RuntimeError:

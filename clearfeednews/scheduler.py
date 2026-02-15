@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 scheduler = AsyncIOScheduler()
 
-# Reference to the bot instance — set by bot.py at startup.
+# Reference to the bot instance - set by bot.py at startup.
 _bot: Bot | None = None
 
 
@@ -35,7 +35,7 @@ async def job_fetch_feeds() -> None:
     """Periodic RSS fetch job."""
     try:
         count = await fetch_all_feeds()
-        logger.info("Scheduled fetch complete — %d new articles", count)
+        logger.info("Scheduled fetch complete - %d new articles", count)
     except Exception:
         logger.exception("Error in scheduled feed fetch")
 
@@ -53,7 +53,7 @@ async def job_cleanup_articles() -> None:
 async def job_send_digests() -> None:
     """Check all active users and send digests to those whose digest time matches now."""
     if _bot is None:
-        logger.warning("Bot reference not set — skipping digest delivery")
+        logger.warning("Bot reference not set - skipping digest delivery")
         return
 
     try:
@@ -131,7 +131,7 @@ async def job_send_digests() -> None:
                 await asyncio.sleep(0.1)
 
             except Forbidden:
-                logger.warning("User %s blocked the bot — deactivating", user.get("user_id"))
+                logger.warning("User %s blocked the bot - deactivating", user.get("user_id"))
                 await set_user_active(user["user_id"], False)
             except Exception:
                 logger.exception("Failed to send digest to user %s", user.get("user_id"))
@@ -175,7 +175,7 @@ def start_scheduler() -> None:
 
     scheduler.start()
     logger.info(
-        "Scheduler started — fetching every %dh, digest check hourly, cleanup daily at 03:00 UTC",
+        "Scheduler started - fetching every %dh, digest check hourly, cleanup daily at 03:00 UTC",
         FETCH_INTERVAL_HOURS,
     )
 
