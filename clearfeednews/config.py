@@ -104,6 +104,7 @@ BLOCKED_SOURCES: list[str] = [
 CATEGORIES: dict[str, str] = {
     "Science & Space":              "🔬",
     "Tech & Innovation":            "💻",
+    "Cinema & Entertainment":       "🎬",
     "AI & Machine Learning":        "🤖",
     "Gaming & Entertainment":       "🎮",
     "Environment & Climate Solutions": "🌱",
@@ -130,6 +131,12 @@ FEEDS: dict[str, list[str]] = {
         "https://www.theverge.com/rss/index.xml",
         "https://techcrunch.com/feed/",
         "https://arstechnica.com/feed/",
+        "https://feeds.wired.com/wired/index",
+    ],
+    "Cinema & Entertainment": [
+        #"https://www.theverge.com/rss/index.xml",
+        #"https://techcrunch.com/feed/",
+        #"https://arstechnica.com/feed/",
         "https://feeds.wired.com/wired/index",
     ],
     "AI & Machine Learning": [

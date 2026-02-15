@@ -79,47 +79,69 @@ async def fetch_trending_topics() -> list[str]:
 
 
 # ---------------------------------------------------------------------------
+# Pre-processed trending index (built once per fetch cycle)
+# ---------------------------------------------------------------------------
+class _TrendingIndex:
+    """Pre-processed lookup structure for fast keyword → trending score."""
+
+    __slots__ = ("exact_words", "topic_entries")
+
+    def __init__(self, trending: list[str]) -> None:
+        total = len(trending)
+        # Map each unique word → best position weight
+        self.exact_words: dict[str, float] = {}
+        # Flat list of (word, position_weight) for fuzzy fallback
+        self.topic_entries: list[tuple[str, float]] = []
+
+        seen_words: set[str] = set()
+        for rank, topic in enumerate(trending):
+            weight = 1.0 - (rank / total)
+            for word in topic.split():
+                # Exact lookup: keep the best (highest) weight per word
+                if word not in self.exact_words or self.exact_words[word] < weight:
+                    self.exact_words[word] = weight
+                # Flat list for fuzzy (deduplicated)
+                if word not in seen_words:
+                    seen_words.add(word)
+                    self.topic_entries.append((word, weight))
+
+
+# ---------------------------------------------------------------------------
 # Scoring
 # ---------------------------------------------------------------------------
 def compute_trending_score(
-    keywords: list[str], trending: list[str]
+    keywords: list[str], index: _TrendingIndex
 ) -> float:
     """Score keyword overlap against trending topics.
 
     Returns a value 0–100.  Higher-ranked trends (earlier in list) carry
     more weight.
     """
-    if not keywords or not trending:
+    if not keywords or not index.exact_words:
         return 0.0
 
-    total_topics = len(trending)
     raw_score = 0.0
 
     for kw in keywords:
-        for rank, topic in enumerate(trending):
-            # Position weight: top-ranked trends score higher
-            position_weight = 1.0 - (rank / total_topics)
+        # Fast path: exact word match (O(1) dict lookup)
+        if kw in index.exact_words:
+            raw_score += index.exact_words[kw]
+            continue
 
-            # Check if keyword appears as substring in topic
-            if kw in topic:
-                raw_score += position_weight * 1.0
-                break  # one match per keyword is enough
-
-            # Fuzzy match for close-but-not-exact matches
-            # Check against individual words in the topic
-            for topic_word in topic.split():
-                similarity = SequenceMatcher(None, kw, topic_word).ratio()
-                if similarity > 0.6:
-                    raw_score += position_weight * similarity
-                    break
-            else:
+        # Slow path: fuzzy match against unique topic words
+        best = 0.0
+        for topic_word, weight in index.topic_entries:
+            # Quick length check — SequenceMatcher can't exceed 0.6
+            # if lengths differ by more than 2.5x
+            if len(kw) > 2 * len(topic_word) or len(topic_word) > 2 * len(kw):
                 continue
-            break  # matched via fuzzy — move to next keyword
+            similarity = SequenceMatcher(None, kw, topic_word).ratio()
+            if similarity > 0.6 and weight * similarity > best:
+                best = weight * similarity
+        raw_score += best
 
     # Normalise to 0–100
-    max_possible = len(keywords)  # perfect score = 1 match per keyword
-    if max_possible == 0:
-        return 0.0
+    max_possible = len(keywords)
     score = min((raw_score / max_possible) * 100, 100.0)
     return round(score, 1)
 
@@ -128,6 +150,7 @@ def score_articles(
     articles: list[dict[str, Any]], trending: list[str]
 ) -> None:
     """Compute and attach trending_score to each article dict in-place."""
+    index = _TrendingIndex(trending)
     for article in articles:
         keywords = extract_keywords(article.get("title", ""))
-        article["trending_score"] = compute_trending_score(keywords, trending)
+        article["trending_score"] = compute_trending_score(keywords, index)
