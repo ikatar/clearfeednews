@@ -25,6 +25,7 @@ DEFAULT_DIGEST_TIMES: list[str] = ["09:00", "18:00"]
 MAX_ARTICLES_PER_CATEGORY: int = int(os.getenv("MAX_ARTICLES_PER_CATEGORY", "5"))
 USE_TRENDING: bool = os.getenv("USE_TRENDING", "true").lower() == "true"
 TRENDING_WEIGHT: float = float(os.getenv("TRENDING_WEIGHT", "0.6"))
+MAX_ARTICLE_AGE_DAYS: int = 10  # skip articles published more than N days ago
 
 # ---------------------------------------------------------------------------
 # Database

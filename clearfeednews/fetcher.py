@@ -5,13 +5,13 @@ from __future__ import annotations
 import asyncio
 import logging
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Any
 from urllib.parse import urlparse
 
 import feedparser
 
-from config import FEEDS, USE_TRENDING
+from config import FEEDS, MAX_ARTICLE_AGE_DAYS, USE_TRENDING
 from database import insert_articles
 from filters import filter_articles, is_source_blocked
 from trending import fetch_trending_topics, score_articles
@@ -106,10 +106,21 @@ async def fetch_all_feeds() -> int:
                 logger.debug("Feed %s has bozo flag but %d entries - using them", url, len(feed.entries))
 
             source_name = _extract_source(url, feed.feed.get("title"))
+            cutoff = datetime.now(timezone.utc) - timedelta(days=MAX_ARTICLE_AGE_DAYS)
             for entry in feed.entries:
                 article = _entry_to_article(entry, category, source_name)
-                if article:
-                    raw_articles.append(article)
+                if not article:
+                    continue
+                if article["published_at"]:
+                    try:
+                        pub_dt = datetime.fromisoformat(article["published_at"])
+                        if pub_dt.tzinfo is None:
+                            pub_dt = pub_dt.replace(tzinfo=timezone.utc)
+                        if pub_dt < cutoff:
+                            continue
+                    except (ValueError, TypeError):
+                        pass
+                raw_articles.append(article)
 
         # Run sentiment / keyword filter
         filtered = filter_articles(raw_articles)
